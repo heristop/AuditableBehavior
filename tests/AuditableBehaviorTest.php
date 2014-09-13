@@ -25,7 +25,7 @@ EOF;
 
     public function testAuditActivity()
     {
-        $o = new AuditableTable();
+        $o = new AuditableBehaviorTest1();
         $o->setName('foo');
         $o->save();
         $this->assertEquals(1, $o->countActivity());
