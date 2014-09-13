@@ -4,7 +4,7 @@ class AuditableBehaviorTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        if (!class_exists('AuditableTable')) {
+        if (!class_exists('AuditableBehaviorTest1')) {
             $schema = <<<EOF
 <database name="auditable_behavior_test_applied_on_table">
   <table name="auditable_behavior_test_1">
@@ -20,7 +20,7 @@ EOF;
     }
 
     public function testActiveRecordMethods() {
-        $this->assertTrue(method_exists('AuditableTable', 'logActivity'));
+        $this->assertTrue(method_exists('AuditableBehaviorTest1', 'logActivity'));
     }
 
     public function testAuditActivity()
