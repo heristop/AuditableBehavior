@@ -1,0 +1,15 @@
+{
+    "name": "heristop/propel-auditable-behavior",
+    "description": "Propel behavior to track and record changes in your models",
+    "keywords": ["Propel", "Behavior", "Auditable"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexandre Mogère",
+        }
+    ],
+    "require": {
+        "php": ">=5.2.4",
+        "propel/propel1": ">=1.6.4"
+    }
+}

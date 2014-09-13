@@ -1,0 +1,1 @@
+$this->logActivity(<?php echo $peerName ?>::AUDIT_LABEL_CREATE, $con);
