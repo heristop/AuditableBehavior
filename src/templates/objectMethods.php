@@ -12,13 +12,23 @@ public function logActivity($action, $con = null)
     }
 
     $activity = new <?php echo $activityTable ?>();
-    $activity-><?php echo $activityActionColumn ?>($action);
-    $activity-><?php echo $objectColumn ?>('<?php echo $className ?>');
-    $activity-><?php echo $objectPkColumn ?>($this->getPrimaryKey());
-    $activity-><?php echo $createdAtColumn ?>(time());
+    $activity->set<?php echo $activityActionColumn ?>($action);
+    $activity->set<?php echo $objectColumn ?>('<?php echo $className ?>');
+    $activity->set<?php echo $objectPkColumn ?>($this->getPrimaryKey());
+    $activity->set<?php echo $createdAtColumn ?>(time());
     $activity->save($con);
 
     return $this;
+}
+
+/**
+ * Create a criteria to filter on <?php echo $className ?> activity
+ */
+public function getActivityCriteria()
+{
+    return <?php echo $activityTable ?>Query::create()
+        ->filterBy<?php echo $objectColumn ?>('<?php echo $className ?>')
+        ->filterBy<?php echo $objectPkColumn ?>($this->getPrimaryKey());
 }
 
 /**
@@ -32,7 +42,7 @@ public function countActivity($action = null, $con = null)
 {
     $query = $this->getActivityCriteria();
     if (!is_null($action)) {
-         $query-><?php echo $activityActionColumn ?>($action);
+        $query-><?php echo $activityActionColumn ?>($action);
     }
 
     return $query->count($con);

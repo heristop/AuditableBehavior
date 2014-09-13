@@ -159,13 +159,16 @@ class AuditableBehavior extends Behavior
         $builder->declareClassFromBuilder($activityBuilder);
         $activityClass = $activityBuilder->getClassname();
         
+        $activityQueryBuilder = $builder->getNewStubQueryBuilder($this->activityTable);
+        $builder->declareClassFromBuilder($activityQueryBuilder);
+        
         $script = $this->renderTemplate('objectMethods', array(
             'className' => $className,
             'activityTable' => $activityClass,
-            'activityActionColumn' => $this->getColumnSetter('activity_action_column'),
-            'objectColumn' => $this->getColumnSetter('object_column'),
-            'objectPkColumn' => $this->getColumnSetter('object_pk_column'),
-            'createdAtColumn' => $this->getColumnSetter('created_at_column'),
+            'activityActionColumn' => $this->getColumnPhpName('activity_action_column'),
+            'objectColumn' => $this->getColumnPhpName('object_column'),
+            'objectPkColumn' => $this->getColumnPhpName('object_pk_column'),
+            'createdAtColumn' => $this->getColumnPhpName('created_at_column'),
         ));
         
         return $script;
@@ -174,30 +177,6 @@ class AuditableBehavior extends Behavior
     protected function getColumnPhpName($name)
     {
         return $this->activityTable->getColumn($this->getParameter($name))->getPhpName();
-    }
-    
-    /**
-     * Get the getter of the column of the behavior
-     *
-     * @param string $name
-     *
-     * @return string The related getter
-     */
-    protected function getColumnGetter($name)
-    {
-        return 'get' . $this->getColumnPhpName($name);
-    }
-    
-    /**
-     * Get the setter of the column of the behavior
-     *
-     * @param string $name
-     *
-     * @return string The related setter
-     */
-    protected function getColumnSetter($name)
-    {
-        return 'set' . $this->getColumnPhpName($name);
     }
     
 }
