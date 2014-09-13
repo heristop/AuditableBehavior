@@ -1,18 +1,18 @@
 /**
  * Log activity
  *
- * @param String $action The activity to report
+ * @param string $action The activity to report
  * @param PropelPDO $con
  * @return <?php echo $className ?>
  */
 public function logActivity($action, $con = null)
 {
     if ($this->isNew()) {
-        throw new PropelException('Unable to log activity on <?php echo $className ?>.');
+        throw new PropelException('Unable to log activity on <?php echo $className ?>');
     }
 
     $activity = new <?php echo $activityTable ?>();
-    $activity->set<?php echo $activityActionColumn ?>($action);
+    $activity->set<?php echo $actionColumn ?>($action);
     $activity->set<?php echo $objectColumn ?>('<?php echo $className ?>');
     $activity->set<?php echo $objectPkColumn ?>($this->getPrimaryKey());
     $activity->set<?php echo $createdAtColumn ?>(time());
@@ -22,7 +22,7 @@ public function logActivity($action, $con = null)
 }
 
 /**
- * Create a criteria to filter on <?php echo $className ?> activity
+ * Create a criteria to filter on activity
  */
 public function getActivityCriteria()
 {
@@ -32,18 +32,57 @@ public function getActivityCriteria()
 }
 
 /**
- * Counts activity actions for <?php echo $className ?>
+ * Counts activity actions
  *
- * @param String $action The activity to count
+ * @param string $action The activity to count
  * @param PropelPDO $con
- * @return Integer
+ * @return integer
  */
 public function countActivity($action = null, $con = null)
 {
     $query = $this->getActivityCriteria();
     if (!is_null($action)) {
-        $query-><?php echo $activityActionColumn ?>($action);
+        $query->filterBy<?php echo $actionColumn ?>($action);
     }
 
     return $query->count($con);
+}
+
+/**
+ * Delete all activities
+ *
+ * @param string $action
+ * @param PropelPDO $con
+ * @return PropelCollection
+ */
+public function flushActivities($action = null, $con = null)
+{
+    $query = $this->getActivityCriteria();
+    if (!is_null($action)) {
+        $query->orderBy<?php echo $actionColumn ?>($action);
+    }
+    
+    return $query->delete($con);
+}
+
+/**
+ * Retrieve last activities
+ *
+ * @param integer $number
+ * @param string $action
+ * @param PropelPDO $con
+ * @return PropelCollection
+ */
+public function getLastActivities($number = 10, $action = null, $con = null)
+{
+    $query = $this->getActivityCriteria()
+        ->orderBy<?php echo $createdAtColumn ?>(Criteria::DESC);
+    if (!is_null($action)) {
+        $query->filterBy<?php echo $actionColumn ?>($action);
+    }
+    if (intval($number) > 0) {
+        $query->limit($number);
+    }
+    
+    return $query->find($con);
 }

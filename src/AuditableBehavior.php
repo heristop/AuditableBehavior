@@ -18,7 +18,7 @@ class AuditableBehavior extends Behavior
         'audit_update' => true,
         'audit_delete' => true,
         'activity_table' => 'audit_activity',
-        'activity_action_column' => 'action',
+        'action_column' => 'action',
         'object_column' => 'object_class',
         'object_pk_column' => 'object_pk',
         'created_at_column' => 'created_at',
@@ -68,7 +68,7 @@ class AuditableBehavior extends Behavior
             $pk->setPrimaryKey(true);
             
             $activityTable->addColumn(array(
-                'name' => $this->getParameter('activity_action_column'),
+                'name' => $this->getParameter('action_column'),
                 'type' => 'VARCHAR',
                 'size' => 255,
             ));
@@ -112,16 +112,16 @@ class AuditableBehavior extends Behavior
         ));
     }
     
-    public function preInsert($builder)
+    public function postInsert($builder)
     {
-        if (!$this->getParameter('audit_insert')) {
+        if (!$this->getParameter('audit_create')) {
             return '';
         }
         
         $peerName = $builder->getStubPeerBuilder()->getClassname();
         $builder->declareClassFromBuilder($builder->getStubObjectBuilder());
         
-        return $this->renderTemplate('objectPreInsert', array('peerName' => $peerName));
+        return $this->renderTemplate('objectPostInsert', array('peerName' => $peerName));
     }
     
     public function preUpdate($builder)
@@ -165,7 +165,7 @@ class AuditableBehavior extends Behavior
         $script = $this->renderTemplate('objectMethods', array(
             'className' => $className,
             'activityTable' => $activityClass,
-            'activityActionColumn' => $this->getColumnPhpName('activity_action_column'),
+            'actionColumn' => $this->getColumnPhpName('action_column'),
             'objectColumn' => $this->getColumnPhpName('object_column'),
             'objectPkColumn' => $this->getColumnPhpName('object_pk_column'),
             'createdAtColumn' => $this->getColumnPhpName('created_at_column'),

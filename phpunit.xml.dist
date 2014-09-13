@@ -11,7 +11,7 @@
     bootstrap="tests/bootstrap.php">
     
     <php>
-      <server name="PROPEL_DIR" value="YOUR_PROPEL_PATH" />
+        <server name="PROPEL_DIR" value="YOUR_PROPEL_PATH" />
     </php>
     
     <testsuites>
